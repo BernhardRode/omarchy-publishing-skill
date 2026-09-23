@@ -21,7 +21,7 @@ clearance.
 ## Install
 
 ```bash
-git clone https://github.com/YOUR_NAME/omarchy-publishing-skill
+git clone https://github.com/ayandexyz/omarchy-publishing-skill
 cd omarchy-publishing-skill
 ./install.sh
 ```
