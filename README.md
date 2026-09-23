@@ -20,17 +20,46 @@ clearance.
 
 ## Install
 
+No clone needed for the agents with a plugin system — point them at this repository.
+
+### Claude Code
+
+```
+/plugin marketplace add ayandexyz/omarchy-publishing-skill
+/plugin install omarchy-plugin-publish@omarchy-publishing-skill
+```
+
+### Codex
+
+```
+codex plugin marketplace add ayandexyz/omarchy-publishing-skill
+codex plugin install omarchy-plugin-publish@omarchy-publishing-skill
+```
+
+Or from inside the CLI with `/plugin marketplace add …`.
+
+### Cursor
+
+Dashboard → **Plugins & MCPs** → **Team Marketplaces** → **Add Marketplace** → **Import
+from Repo**, and paste `https://github.com/ayandexyz/omarchy-publishing-skill`. Turn on
+**Enable Auto Refresh** to track pushes.
+
+### opencode, or any agent, without a plugin system
+
+opencode installs plugins as git-backed npm packages, which is more machinery than one
+skill needs. Copy the skill directory instead:
+
 ```bash
 git clone https://github.com/ayandexyz/omarchy-publishing-skill
 cd omarchy-publishing-skill
 ./install.sh
 ```
 
-With no arguments it installs into every agent it finds on your machine. Then start a new
-agent session — skills are discovered at startup.
+With no arguments it installs into every agent it finds on your machine. This is also the
+fallback if any of the plugin installs above misbehave.
 
 ```bash
-./install.sh --agent codex     # just one: claude | codex | opencode | cursor
+./install.sh --agent opencode  # just one: claude | codex | opencode | cursor
 ./install.sh --all             # all four, detected or not
 ./install.sh --project         # into the current repo instead of $HOME
 ./install.sh --list            # where it would go, and what is installed
@@ -38,8 +67,10 @@ agent session — skills are discovered at startup.
 ./install.sh --link            # symlink instead of copy, for editing the skill
 ```
 
-All four agents read the same `SKILL.md` format, so installing is just copying one
-directory to the right place. To do it by hand:
+### Or by hand
+
+All four agents read the same `SKILL.md` standard, so installing is just putting
+`skills/omarchy-plugin-publish/` in the right place:
 
 | Agent | User-level path | Project-level path |
 | --- | --- | --- |
@@ -50,7 +81,9 @@ directory to the right place. To do it by hand:
 
 Codex, Cursor and opencode all also read `~/.agents/skills/`, and Cursor and opencode read
 `~/.claude/skills/` for compatibility — so one or two locations usually cover everything.
-`agents/openai.yaml` supplies Codex's display name; the other agents ignore it.
+
+Whichever route you take, start a new agent session afterwards; skills are discovered at
+startup.
 
 ## Use
 
@@ -69,8 +102,8 @@ Prepare the submission issue for the current commit.
 The structural half runs without an agent, offline, read-only:
 
 ```bash
-scripts/readiness-check.sh ~/code/omarchy-weather
-scripts/readiness-check.sh --json ~/code/omarchy-weather   # exit 1 if blocked
+skills/omarchy-plugin-publish/scripts/readiness-check.sh ~/code/omarchy-weather
+skills/omarchy-plugin-publish/scripts/readiness-check.sh --json ~/code/my-plugin  # exit 1 if blocked
 ```
 
 It checks manifest validity and field limits, plugin-id syntax and the reserved
@@ -87,6 +120,8 @@ agent audit is what covers those.
 
 ## What's in here
 
+Everything the agent uses lives under `skills/omarchy-plugin-publish/`:
+
 | Path | |
 | --- | --- |
 | `SKILL.md` | The skill: how to audit, fix, package and submit. |
@@ -95,6 +130,9 @@ agent audit is what covers those.
 | `references/research-coverage.md` | Which issue threads were read, and the limits of that sample. |
 | `scripts/readiness-check.sh` | Offline structural preflight. |
 | `assets/submission-body.md` | The submission issue template, headings and checklist intact. |
+
+The `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/` and `.agents/plugins/` manifests
+at the repository root are what let each agent install this as a plugin.
 
 ## Where the rules come from
 

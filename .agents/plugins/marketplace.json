@@ -1,0 +1,13 @@
+{
+  "name": "omarchy-publishing-skill",
+  "interface": { "displayName": "Omarchy Publishing" },
+  "plugins": [
+    {
+      "name": "omarchy-plugin-publish",
+      "source": { "source": "local", "path": "./" },
+      "policy": { "installation": "AVAILABLE", "authentication": "NONE" },
+      "category": "Developer Tools",
+      "interface": { "displayName": "Omarchy Plugin Publishing" }
+    }
+  ]
+}

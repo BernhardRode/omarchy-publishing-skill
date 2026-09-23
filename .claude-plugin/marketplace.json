@@ -1,0 +1,14 @@
+{
+  "name": "omarchy-publishing-skill",
+  "description": "Skill for publishing Omarchy plugins to the plugin marketplace",
+  "owner": { "name": "Ayan De" },
+  "plugins": [
+    {
+      "name": "omarchy-plugin-publish",
+      "description": "Publish Omarchy plugins: audits against marketplace rules and observed reviewer blockers, checks publishing readiness, and prepares the submission issue.",
+      "version": "1.0.0",
+      "source": "./",
+      "author": { "name": "Ayan De" }
+    }
+  ]
+}

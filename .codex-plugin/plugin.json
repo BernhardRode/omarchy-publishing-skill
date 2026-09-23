@@ -1,0 +1,24 @@
+{
+  "name": "omarchy-plugin-publish",
+  "version": "1.0.0",
+  "description": "Publish Omarchy plugins: audits against marketplace rules and observed reviewer blockers, checks publishing readiness, and prepares the submission issue.",
+  "author": { "name": "Ayan De", "url": "https://github.com/ayandexyz" },
+  "homepage": "https://github.com/ayandexyz/omarchy-publishing-skill",
+  "repository": "https://github.com/ayandexyz/omarchy-publishing-skill",
+  "license": "MIT",
+  "keywords": ["omarchy", "plugin", "marketplace", "publishing", "security-review", "quickshell"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Omarchy Plugin Publishing",
+    "shortDescription": "Prepare Omarchy plugins for marketplace validation and review",
+    "longDescription": "Audits an Omarchy plugin against the marketplace's machine-enforced rules and the blockers maintainers actually raise, runs an offline publishing-readiness check, fixes what you authorize, and assembles a submission tied to one exact commit. It does not approve anything; listing remains a maintainer decision.",
+    "developerName": "Ayan De",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "defaultPrompt": [
+      "Is my Omarchy plugin ready to publish?",
+      "Audit this plugin for the Omarchy marketplace security review."
+    ],
+    "websiteURL": "https://github.com/ayandexyz/omarchy-publishing-skill"
+  }
+}

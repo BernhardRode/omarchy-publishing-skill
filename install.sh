@@ -17,8 +17,8 @@
 set -euo pipefail
 
 SKILL="omarchy-plugin-publish"
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PAYLOAD=(SKILL.md references assets scripts agents)
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$REPO/skills/$SKILL"
 
 AGENTS=(claude codex opencode cursor)
 MODE=install
@@ -45,7 +45,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-[ -f "$SRC/SKILL.md" ] || die "SKILL.md not found next to this script ($SRC)."
+[ -f "$SRC/SKILL.md" ] || die "skills/$SKILL/SKILL.md not found under $REPO."
 
 if [ -n "$PROJECT" ]; then
   [ -d "$PROJECT" ] || die "not a directory: $PROJECT"
@@ -156,10 +156,7 @@ for a in "${CHOSEN[@]}"; do
     echo "linked    $a  $dest -> $SRC"
   else
     mkdir -p "$dest"
-    for item in "${PAYLOAD[@]}"; do
-      [ -e "$SRC/$item" ] || continue
-      cp -R "$SRC/$item" "$dest/"
-    done
+    cp -R "$SRC/." "$dest/"
     [ -f "$dest/scripts/readiness-check.sh" ] && chmod +x "$dest/scripts/readiness-check.sh"
     echo "installed $a  $dest"
   fi
