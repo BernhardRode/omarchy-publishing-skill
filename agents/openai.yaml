@@ -1,0 +1,4 @@
+interface:
+  display_name: "Omarchy Plugin Publishing"
+  short_description: "Prepare plugins for marketplace validation and review"
+  default_prompt: "Use $omarchy-plugin-publish to audit this plugin, fix publishing blockers, and prepare a submission for the exact final commit."
