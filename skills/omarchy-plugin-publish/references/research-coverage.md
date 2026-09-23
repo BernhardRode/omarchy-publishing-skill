@@ -4,6 +4,8 @@ Retrieved 2026-09-23. Marketplace source: [3382370f6b9a5334876d461a96335198bd011
 
 Inspected metadata for the 100 most recently updated `submission` issues, then read 41 complete comment threads selected to include the user issue, recurring blockers, complex re-reviews, and listed examples. This is not a random sample or an approval-rate study. Current labels and edited bot comments are not historical state snapshots.
 
+Amended 2026-09-24 with one first-hand thread, [#8397](https://github.com/omacom/omarchy-plugin-marketplace/issues/8397) (Glance Face Unlock), observed live rather than sampled: a supply-chain finding against an unpinned companion-application install that the plugin executes. It is the source of the unpinned-install check in `scripts/readiness-check.sh` and the opening paragraph of the dependencies section in `review-patterns.md`. At time of writing that issue is open and unresolved, so it evidences the finding, not an outcome.
+
 | Issue | Title | State when fetched | Comments fetched | Maintainer comments |
 | --- | --- | --- | --- | --- |
 | [#2542](https://github.com/omacom/omarchy-plugin-marketplace/issues/2542) | [Plugin]: BatPuter v3.0 — Wayne Tech Tactical Productivity HUD | closed; not marked listed | 13 | 4 |
@@ -47,6 +49,7 @@ Inspected metadata for the 100 most recently updated `submission` issues, then r
 | [#8307](https://github.com/omacom/omarchy-plugin-marketplace/issues/8307) | [Plugin]: Dock | open; not marked listed | 3 | 1 |
 | [#8328](https://github.com/omacom/omarchy-plugin-marketplace/issues/8328) | [Plugin]: Taskwarrior Time | closed; not marked listed | 8 | 2 |
 | [#8330](https://github.com/omacom/omarchy-plugin-marketplace/issues/8330) | [Plugin]: Omodachi | open; not marked listed | 4 | 1 |
+| [#8397](https://github.com/omacom/omarchy-plugin-marketplace/issues/8397) | [Plugin]: Glance Face Unlock | open; needs-fixes | 3 | 1 |
 
 The account `github-actions[bot]` supplied automated reports. `HANCORE-linux` supplied the review comments used here. Public account identity does not establish how reviews were authored. Issue #8078 provides a listed example with review-capability labels and no HANCORE prose in the fetched thread; do not infer why a maintainer approved from absence of a comment.
 

@@ -54,7 +54,7 @@ Scan ceilings: 1,000 relevant files, 8 MiB total text, 512 KiB per file. Special
 
 ## Concrete validation
 
-The bundled `scripts/readiness-check.sh PLUGIN_DIR` (`--json` for machine output; exit 1 on blockers) reproduces the structural rules above offline: manifest object/schemaVersion/field limits, id syntax and reserved namespace, kinds-to-entryPoints mapping and entry-point existence and tracking, `barWidget.defaultSection`, root README and license file, symlinks, preview format/size, agent-control payload files, patterns for the five deterministic finding IDs, review-capability hints, and uncommitted or unpushed HEAD. It requires `jq`. It does not run the marketplace scanner and its output is never bot evidence.
+The bundled `scripts/readiness-check.sh PLUGIN_DIR` (`--json` for machine output; exit 1 on blockers) reproduces the structural rules above offline: manifest object/schemaVersion/field limits, id syntax and reserved namespace, kinds-to-entryPoints mapping and entry-point existence and tracking, `barWidget.defaultSection`, root README and license file, symlinks, preview format/size, agent-control payload files, patterns for the five deterministic finding IDs, review-capability hints, unpinned install instructions for software the plugin executes, and uncommitted or unpushed HEAD. It requires `jq`. It does not run the marketplace scanner and its output is never bot evidence.
 
 First inspect tool availability/version. Static local checks, using the actual plugin directory and QML files:
 

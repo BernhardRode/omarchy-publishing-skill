@@ -240,6 +240,24 @@ hit sudoers-dangerous-passwordless-command \
 hit privileged-process-control-from-shared-temp \
   '/tmp/[^"'"'"'[:space:]]*(pid|lock)' \
   "PID or lock state appears to live in a shared temporary path. If a privileged signal is authorized from it, that is a blocking finding - move runtime state to \$XDG_RUNTIME_DIR and verify process identity immediately before signaling."
+# An install instruction with no version pin, for software the plugin then
+# executes. Not one of the five deterministic ids and not a blocker, but a
+# repeatedly observed reviewer blocker: a floor like `pipx install foo` or
+# `npm i -g bar` resolves the package AND its transitive dependencies to
+# whatever is newest on the day, so the executable surface behind a reviewed
+# commit changes with no change to the commit. Lines already carrying a pin,
+# a hash, a lockfile or a digest are left alone.
+UNPINNED_INSTALL="$(printf '%s\n' "$SCAN" | while IFS= read -r f; do
+  [ -f "$DIR/$f" ] || continue
+  grep -nHE '^[[:space:]]*[$>]?[[:space:]]*(sudo[[:space:]]+)?(pipx|pip3?|uv([[:space:]]+tool)?|npm|pnpm|yarn|cargo|go|gem|brew)[[:space:]]+(install|i|add)[[:space:]]' "$DIR/$f" 2>/dev/null \
+    | grep -vE '==|--require-hashes|--rev[[:space:]]|@[0-9]|@sha256:|\.lock|requirements[^[:space:]]*\.txt|package-lock|Cargo\.lock|uv\.lock|poetry\.lock' \
+    | head -3 | sed "s|^$DIR/||"
+done | head -6)"
+if [ -n "$UNPINNED_INSTALL" ]; then
+  warn "Unpinned install instruction. If the plugin executes what this installs, expect a supply-chain finding: pin the complete dependency set to exact versions with verified hashes (a consumed lockfile, e.g. pip --require-hashes, npm ci, cargo --locked with a committed lock), not just the top-level package. Verify each hit - a documented command counts, a passing mention does not:
+$(printf '%s' "$UNPINNED_INSTALL" | sed 's/^/    /')"
+fi
+
 REMOTE_GIT="$(grep_scan 'git[[:space:]]+clone[^\n]*(--branch|--depth|https?://)')"
 if [ -n "$REMOTE_GIT" ]; then
   warn "[remote-git-execution-unpinned] A remote Git source is cloned. If its code is then built or executed, bind it to a full 40-character commit and check out detached:
