@@ -17,6 +17,8 @@ Read the entire relevant issue history, including current bot reports and mainta
 
 ## Audit and fix
 
+Start with `scripts/readiness-check.sh /absolute/path/to/plugin` (add `--json` to consume the result). It is read-only and offline, and reports structural blockers, likely review questions, detected review capabilities and the commit you would submit. Treat it as a first sweep only: it reproduces the marketplace's structural rules and flags patterns for the five deterministic findings, but it is not the scanner, produces no bot evidence, and cannot see the data-flow problems below. Never report its output as a validation result.
+
 Read [review-patterns.md](references/review-patterns.md). Research scope and sampled threads are recorded in [research-coverage.md](references/research-coverage.md). Inventory the whole shipped tree, then apply only the sections relevant to its actual behavior. Include QML, helpers, installers/removers, README and in-panel commands, dependencies/build tools, CI/release pipelines, companion apps, downloaded media, and optional/error/fallback paths. A lockfile or safe helper is insufficient if another exposed path bypasses it.
 
 For each finding, report the file/line, data source, sensitive operation, concrete failure, fix, and source basis:
@@ -37,7 +39,7 @@ Finish code, tests, docs, version changes and CI pins before refreshing remote v
 
 Keep the default branch stable during review; ongoing development can continue on a separate branch. Any published change, including README-only changes, requires fresh evidence. Do not freeze the branch by changing GitHub protection settings.
 
-Run available static validation from requirements.md. A local preflight is advisory and does not replace bot-authored evidence. Runtime testing requires an appropriate authorized test environment; cloning/enabling an Omarchy plugin can change the active shell.
+Re-run `scripts/readiness-check.sh` against the final commit, then run available static validation from requirements.md. A local preflight is advisory and does not replace bot-authored evidence. Runtime testing requires an appropriate authorized test environment; cloning/enabling an Omarchy plugin can change the active shell.
 
 Produce a concrete review packet outside the distributable plugin:
 
