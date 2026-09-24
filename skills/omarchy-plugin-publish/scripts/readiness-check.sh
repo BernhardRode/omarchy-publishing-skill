@@ -258,6 +258,21 @@ if [ -n "$UNPINNED_INSTALL" ]; then
 $(printf '%s' "$UNPINNED_INSTALL" | sed 's/^/    /')"
 fi
 
+# The other half of the same problem: a pinned install instruction is worth
+# nothing if the plugin will auto-select a binary from somewhere else. Look for
+# well-known unpinned install locations appearing as paths in code rather than
+# docs - a candidate list, a discovery order, a fallback - because that is the
+# plugin choosing on the user's behalf which unreviewed code gets to run.
+DISCOVERY="$(printf '%s\n' "$SCAN" | grep -viE '(readme|changelog|contributing|security|license|docs?/|(^|/)tests?/|(^|/)spec/|[._-](test|spec)\.)' | while IFS= read -r f; do
+  [ -f "$DIR/$f" ] || continue
+  grep -nHE '(\.local/share/pipx/venvs|\.local/bin|\.cargo/bin|\.deno/bin|\.bun/bin|node_modules/\.bin|/usr/local/bin|/opt/homebrew/bin)' "$DIR/$f" 2>/dev/null \
+    | head -3 | sed "s|^$DIR/||"
+done | head -6)"
+if [ -n "$DISCOVERY" ]; then
+  warn "Executable discovered from an install location, in code. If the plugin picks any of these by itself, a pinned install instruction does not bind what actually runs - and an ownership or inode check does not either, since it binds a local file between check and execution, not the package versions behind it. Resolve one documented, pinned location; make anything else an explicit user setting:
+$(printf '%s' "$DISCOVERY" | sed 's/^/    /')"
+fi
+
 REMOTE_GIT="$(grep_scan 'git[[:space:]]+clone[^\n]*(--branch|--depth|https?://)')"
 if [ -n "$REMOTE_GIT" ]; then
   warn "[remote-git-execution-unpinned] A remote Git source is cloned. If its code is then built or executed, bind it to a full 40-character commit and check out detached:
