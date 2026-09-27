@@ -111,7 +111,8 @@ It checks manifest validity and field limits, plugin-id syntax and the reserved
 is a tracked file, root README and license, symlinks, preview format and size, agent-control
 files in the payload, patterns matching the five deterministic security findings, which
 review capabilities your plugin will trigger, and whether your HEAD is actually committed
-and pushed. Needs `jq`.
+and pushed. It also notes translation readiness — inline QML strings, a missing `i18n/en.json`
+catalog, translations with drifted keys — as notes only, never blockers. Needs `jq`.
 
 This is a first sweep, not a verdict. It reproduces the marketplace's structural rules —
 it is not the marketplace scanner, it produces nothing a reviewer will accept as evidence,
@@ -127,12 +128,26 @@ Everything the agent uses lives under `skills/omarchy-plugin-publish/`:
 | `SKILL.md` | The skill: how to audit, fix, package and submit. |
 | `references/requirements.md` | Machine-enforced contract — manifest schema, ids, entry points, baseline policy, validation commands. |
 | `references/review-patterns.md` | Blockers maintainers actually raise, each linked to the review comment it came from. |
+| `references/i18n.md` | How to make a plugin translatable so a fork can add a language with one file. |
 | `references/research-coverage.md` | Which issue threads were read, and the limits of that sample. |
 | `scripts/readiness-check.sh` | Offline structural preflight. |
 | `assets/submission-body.md` | The submission issue template, headings and checklist intact. |
+| `assets/translating.md` | `TRANSLATING.md` template for plugin repos, with a ready-made AI translation prompt. |
 
 The `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/` and `.agents/plugins/` manifests
 at the repository root are what let each agent install this as a plugin.
+
+## Translation readiness
+
+Every plugin the skill prepares should be ready for i18n. All user-visible text goes into an
+`i18n/en.json` catalog, loaded with a locale-aware English fallback, using named
+placeholders and plural keys. Then anyone can fork the plugin, tell their AI agent
+"translate this into Portuguese", and get a working `i18n/pt.json` without touching any code.
+The skill audits this on every pass and, when you authorize fixes, externalizes the
+strings and adds a `TRANSLATING.md` to your plugin.
+
+This is the skill's own recommendation, not a marketplace rule. It is reported separately
+from review findings and never blocks a submission.
 
 ## Where the rules come from
 

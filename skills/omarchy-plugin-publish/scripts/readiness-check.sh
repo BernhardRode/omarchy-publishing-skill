@@ -279,6 +279,38 @@ if [ -n "$REMOTE_GIT" ]; then
 $(printf '%s' "$REMOTE_GIT" | sed 's/^/    /')"
 fi
 
+# ------------------------------------------------------- translation readiness
+# Not a marketplace rule: an additional recommendation (references/i18n.md).
+# Reported as notes only, so it can never block or turn into a review question.
+QML_FILES="$(printf '%s\n' "$SCAN" | grep -iE '\.qml$' || true)"
+if [ -n "$QML_FILES" ]; then
+  LITERALS="$(printf '%s\n' "$QML_FILES" | while IFS= read -r f; do
+    [ -f "$DIR/$f" ] || continue
+    grep -nHE '^[[:space:]]*(text|title|placeholderText|tooltip(Text)?|label|description|summary|body)[[:space:]]*:[[:space:]]*"[^"]*[[:alpha:]][^"]*"' "$DIR/$f" 2>/dev/null \
+      | sed "s|^$DIR/||"
+  done)"
+  NLIT=0; [ -n "$LITERALS" ] && NLIT="$(printf '%s\n' "$LITERALS" | wc -l | tr -d ' ')"
+  if ! printf '%s\n' "$FILES" | grep -qxF 'i18n/en.json'; then
+    note "i18n: no i18n/en.json string catalog; $NLIT inline user-visible QML literal(s) found. Not a marketplace rule - externalizing strings lets forks add a language with one file (see references/i18n.md).$( [ "$NLIT" -gt 0 ] && printf '\n%s' "$(printf '%s\n' "$LITERALS" | head -5 | sed 's/^/    /')")"
+  else
+    [ "$NLIT" -gt 0 ] && note "i18n: $NLIT inline user-visible QML literal(s) bypass the i18n/en.json catalog:
+$(printf '%s\n' "$LITERALS" | head -5 | sed 's/^/    /')"
+    EN_KEYS="$(jq -r 'if type=="object" and all(.[]; type=="string") then keys[] else error("bad") end' "$DIR/i18n/en.json" 2>/dev/null)" \
+      || note "i18n: i18n/en.json is not a flat JSON object of strings."
+    while IFS= read -r cf; do
+      [ -z "$cf" ] || [ "$cf" = "i18n/en.json" ] && continue
+      KEYS="$(jq -r 'if type=="object" and all(.[]; type=="string") then keys[] else error("bad") end' "$DIR/$cf" 2>/dev/null)" \
+        || { note "i18n: $cf is not a flat JSON object of strings."; continue; }
+      EXTRA="$(comm -13 <(printf '%s\n' "$EN_KEYS" | sort) <(printf '%s\n' "$KEYS" | sort) | grep -v '^$' || true)"
+      MISSING="$(comm -23 <(printf '%s\n' "$EN_KEYS" | sort) <(printf '%s\n' "$KEYS" | sort) | grep -v '^$' || true)"
+      [ -n "$EXTRA" ] && note "i18n: $cf has key(s) not in en.json (never shown): $(printf '%s' "$EXTRA" | head -5 | paste -sd, -)"
+      [ -n "$MISSING" ] && note "i18n: $cf is missing $(printf '%s\n' "$MISSING" | wc -l | tr -d ' ') key(s); those fall back to English."
+    done < <(printf '%s\n' "$FILES" | grep -E '^i18n/[^/]+\.json$')
+    printf '%s\n' "$FILES" | grep -qiE '^translating(\.[^/]+)?$' \
+      || note "i18n: no root TRANSLATING.md telling forks how to add a language (template: assets/translating.md)."
+  fi
+fi
+
 # ------------------------------------------------------- review capabilities
 # Capabilities are not defects. They route the submission to manual review.
 capcheck() { local out; out="$(grep_scan "$2")"; [ -n "$out" ] && cap "$1"; }
