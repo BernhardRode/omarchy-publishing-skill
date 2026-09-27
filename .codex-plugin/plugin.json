@@ -1,6 +1,6 @@
 {
   "name": "omarchy-plugin-publish",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Publish Omarchy plugins: audits against marketplace rules and observed reviewer blockers, checks publishing readiness, and prepares the submission issue.",
   "author": { "name": "Ayan De", "url": "https://github.com/ayandexyz" },
   "homepage": "https://github.com/ayandexyz/omarchy-publishing-skill",
