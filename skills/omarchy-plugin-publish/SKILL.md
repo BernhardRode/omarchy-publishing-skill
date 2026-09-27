@@ -31,6 +31,12 @@ Trace input all the way to use. Do not call a post-buffer truncation a byte limi
 
 When the user requests preparation/fixes, make scoped reversible edits and verify them. For audit-only requests, report without editing. Preserve the intended feature; explain any feature change required to satisfy a reviewed boundary instead of silently deleting functionality. Do not edit host desktop configuration or run installers merely to inspect a submission. Keep this AI skill outside the distributed Omarchy plugin: reviewers have rejected agent-control material inside plugin payloads.
 
+## Prepare for translation
+
+Every plugin this skill prepares should be ready for i18n, so a fork can add a language by dropping in one translated catalog, typically with an AI agent. Read [i18n.md](references/i18n.md). Audit it on every pass and report it in its own section as an **additional recommendation**: it is not marketplace policy or a submission blocker. When fixes are authorized, externalize user-visible strings into `i18n/en.json` with a locale-aware fallback loader, named placeholders and plural keys, add a `TRANSLATING.md` from [the template](assets/translating.md), and keep English behavior identical. Don't ship unrequested machine translations. Finish this before assembling the snapshot; if the user wants to submit first, say what remains instead.
+
+## Verify fixes
+
 Use focused behavioral checks for actual risks: over-limit stdout **and stderr**, stalled descendants, symlink/FIFO/path replacement, secret transport, malicious markup, digest mismatch, or fallback failure, as applicable. Re-audit every alternate path after a fix. Record tests actually run and limitations; never invent live hardware/runtime results.
 
 ## Assemble the review snapshot
@@ -43,7 +49,7 @@ Re-run `scripts/readiness-check.sh` against the final commit, then run available
 
 Produce a concrete review packet outside the distributable plugin:
 
-- Readiness report: repository, full SHA, marketplace policy revision, checks/results, remaining blockers, and review capabilities with reasons and boundaries.
+- Readiness report: repository, full SHA, marketplace policy revision, checks/results, remaining blockers, review capabilities with reasons and boundaries, and translation readiness.
 - Completed issue title/body from [the template](assets/submission-body.md), or a minimal proposed edit to the existing issue preserving its content and checklist.
 - Concise maintainer notes covering setup, privileges, network/secret handling, persistent writes/removal, immutable dependencies, and relevant test evidence. Include only applicable facts.
 

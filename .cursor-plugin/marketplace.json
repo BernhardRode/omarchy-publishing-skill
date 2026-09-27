@@ -6,7 +6,7 @@
       "name": "omarchy-plugin-publish",
       "displayName": "Omarchy Plugin Publishing",
       "description": "Publish Omarchy plugins: audits against marketplace rules and observed reviewer blockers, checks publishing readiness, and prepares the submission issue.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "source": "./"
     }
   ]
